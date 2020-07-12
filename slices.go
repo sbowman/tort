@@ -15,10 +15,11 @@ type SliceAssertions struct {
 // Slice identifies a slice field on a struct.  If the field isn't present, or isn't a slice,
 // generates an error.
 func (assert StructAssertions) Slice(field string) SliceAssertions {
+	name := fmt.Sprintf("%s.%s", assert.Type(), field)
 	property := assert.Field(field)
 
 	if property.Kind() != reflect.Slice {
-		assert.Fatal("field %s is not a slice", field)
+		assert.Fatal("field %s is not a slice", name)
 	}
 
 	var slice []interface{}
@@ -28,7 +29,7 @@ func (assert StructAssertions) Slice(field string) SliceAssertions {
 
 	return SliceAssertions{
 		Assertions: assert.Assertions,
-		name: fmt.Sprintf("%s.%s", assert.Type(), field),
+		name: name,
 		slice: slice,
 	}
 }

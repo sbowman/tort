@@ -21,6 +21,7 @@ type TimeAssertions struct {
 // Time identifies a time field on a struct.  If the field isn't present, or isn't a time.Time or
 // implements TimeAssertion, generates an error.
 func (assert StructAssertions) Time(field string) TimeAssertions {
+	name := fmt.Sprintf("%s.%s", assert.Type(), field)
 	property := assert.Field(field)
 
 	val, ok := property.Interface().(time.Time)
@@ -28,13 +29,13 @@ func (assert StructAssertions) Time(field string) TimeAssertions {
 		if i, ok := property.Interface().(TimeAssertion); ok {
 			val = i.Assert()
 		} else {
-			assert.Fatal(`%s is not time; it's "%#v"`, field, property.Interface())
+			assert.Fatal(`%s is not time; it's "%#v"`, name, property.Interface())
 		}
 	}
 
 	return TimeAssertions{
 		Assertions: assert.Assertions,
-		name: fmt.Sprintf("%s.%s", assert.Type(), field),
+		name: name,
 		time: val,
 	}
 }
