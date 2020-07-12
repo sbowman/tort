@@ -1,0 +1,69 @@
+package tort
+
+import (
+	"fmt"
+	"reflect"
+)
+
+// Code generated from templates/uints.tmpl; DO NOT EDIT.
+
+// Uint{{.Bits}}Assertions are tests around integer (uint{{.Bits}}) values.
+type Uint{{.Bits}}Assertions struct {
+	Assertions
+	name string
+	num uint{{.Bits}}
+}
+
+// Uint{{.Bits}} identifies an integer variable value and returns test functions for its values.
+func (assert Assertions) Uint{{.Bits}}(value int{{.Bits}}) UintAssertions {
+	return UintAssertions{
+		Assertions: assert,
+		name: "uint{{.Bits}}",
+		num: value,
+	}
+}
+
+// Uint looks for the given struct field, confirms it's an uint{{.Bits}}, and returns the assertions valid for
+// the integer.
+func (assert StructAssertions) Uint{{.Bits}}(field string) UintAssertions {
+	name := fmt.Sprintf("%s.%s", assert.Type(), field)
+	property := assert.Field(field)
+
+	if property.Kind() != reflect.Uint{{.Bits}} {
+		assert.Fatal("field %s is not an uint{{.Bits}}", name)
+	}
+
+	return UintAssertions{
+		Assertions: assert.Assertions,
+		name: name,
+		num: uint{{.Bits}}(property.Uint()),
+	}
+}
+
+// Equals generates an error if the integer value isn't the same as other.
+func (assert Uint{{.Bits}}Assertions) Equals(other uint{{.Bits}}) {
+	if assert.num != other {
+		assert.Failed(`expected %s to be %d, but it was %d`, assert.name, other, assert.num)
+	}
+}
+
+// Equals generates an error if the integer value is the same as the other.
+func (assert Uint{{.Bits}}Assertions) NotEquals(other uint{{.Bits}}) {
+	if assert.num == other {
+		assert.Failed(`expected %s to not be %d`, assert.name, other)
+	}
+}
+
+// GreaterThan generates an error if the integer value is less than or equal to the other.
+func (assert Uint{{.Bits}}Assertions) GreaterThan(other uint{{.Bits}}) {
+	if assert.num <= other {
+		assert.Failed(`expected %s to be greater than %d, but it was %d`, assert.name, other, assert.num)
+	}
+}
+
+// LessThan generates an error if the integer value is greater than or equal to the other.
+func (assert Uint{{.Bits}}Assertions) LessThan(other uint{{.Bits}}) {
+	if assert.num >= other {
+		assert.Failed(`expected %s to be less than %d, but it was %d`, assert.name, other, assert.num)
+	}
+}
