@@ -40,14 +40,14 @@ func (assert StructAssertions) Time(field string) TimeAssertions {
 }
 
 // Set generates an error if the time is set (not zero).
-func (assert TimeAssertions) Set() {
+func (assert TimeAssertions) IsSet() {
 	if assert.time.IsZero() {
 		assert.Failed(`%s is not set`, assert.name)
 	}
 }
 
 // Unset generates an error if the time is not set (is zero).
-func (assert TimeAssertions) Unset() {
+func (assert TimeAssertions) IsNotSet() {
 	if !assert.time.IsZero() {
 		assert.Failed(`%s is set to %s`, assert.name, assert.time)
 	}

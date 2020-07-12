@@ -1,14 +1,15 @@
 # Tort
 
-Tort is a simple assertions library to help write Go unit tests.  It is very early on, and Tort
-lacks test cases of its own.
+Tort is a simple assertions library to help write Go unit tests.  It's early on, with only a 
+smattering of assertions implemented, and no test cases.
 
 Here's a sample of standard test code:
 
     func TestCreateTask(t *testing.T) {
         var details = "This is a sample task"
+        var user = "jdoe@nowhere.com"
     
-        task, err := domain.CreateTask(details, user.ID)
+        task, err := domain.CreateTask(details, user)
         if err != nil {
             t.Fatalf("Unable to create task %s", details)
         }
@@ -42,15 +43,16 @@ Here's the same test sample, but with Tort:
         assert := tort.For(t)
 
         var details = "This is a sample task"
+        var user = "jdoe@nowhere.com"
     
-        task, err := domain.CreateTask(details, user.ID)
+        task, err := domain.CreateTask(details, user)
         assert.When("creating a task").Error(err).IsNil()
         assert.Struct(task).String("ID").NotBlank()
         assert.Struct(task).String("Details").Equals(details)
 
         created := task.GetStatus(domain.StatusCreated)
         assert.Struct(status).String("Type").Equals(domain.StatusCreated)
-        assert.Struct(status).Time("Updated").Set()
+        assert.Struct(status).Time("Updated").IsSet()
         assert.Struct(status).Time("Updated").Within(time.Minute)
         assert.Struct(status).String("UpdatedBy").Equals(user.ID)
     }
