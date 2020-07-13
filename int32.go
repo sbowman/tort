@@ -11,21 +11,21 @@ import (
 type Int32Assertions struct {
 	Assertions
 	name string
-	num int32
+	num  int32
 }
 
 // Int32 identifies an integer variable value and returns test functions for its values.
-func (assert Assertions) Int32(value int32) IntAssertions {
-	return IntAssertions{
+func (assert Assertions) Int32(value int32) Int32Assertions {
+	return Int32Assertions{
 		Assertions: assert,
-		name: "int32",
-		num: value,
+		name:       "int32",
+		num:        value,
 	}
 }
 
 // Int looks for the given struct field, confirms it's an int32, and returns the assertions valid for
 // the integer.
-func (assert StructAssertions) Int32(field string) IntAssertions {
+func (assert StructAssertions) Int32(field string) Int32Assertions {
 	name := fmt.Sprintf("%s.%s", assert.Type(), field)
 	property := assert.Field(field)
 
@@ -33,15 +33,17 @@ func (assert StructAssertions) Int32(field string) IntAssertions {
 		assert.Fatal("field %s is not an int32", name)
 	}
 
-	return IntAssertions{
+	return Int32Assertions{
 		Assertions: assert.Assertions,
-		name: name,
-		num: int32(property.Int()),
+		name:       name,
+		num:        int32(property.Int()),
 	}
 }
 
 // Equals generates an error if the integer value isn't the same as other.
 func (assert Int32Assertions) Equals(other int32) {
+	assert.t.Helper()
+
 	if assert.num != other {
 		assert.Failed(`expected %s to be %d, but it was %d`, assert.name, other, assert.num)
 	}
@@ -49,6 +51,8 @@ func (assert Int32Assertions) Equals(other int32) {
 
 // Equals generates an error if the integer value is the same as the other.
 func (assert Int32Assertions) NotEquals(other int32) {
+	assert.t.Helper()
+
 	if assert.num == other {
 		assert.Failed(`expected %s to not be %d`, assert.name, other)
 	}
@@ -56,6 +60,8 @@ func (assert Int32Assertions) NotEquals(other int32) {
 
 // GreaterThan generates an error if the integer value is less than or equal to the other.
 func (assert Int32Assertions) GreaterThan(other int32) {
+	assert.t.Helper()
+
 	if assert.num <= other {
 		assert.Failed(`expected %s to be greater than %d, but it was %d`, assert.name, other, assert.num)
 	}
@@ -63,6 +69,8 @@ func (assert Int32Assertions) GreaterThan(other int32) {
 
 // LessThan generates an error if the integer value is greater than or equal to the other.
 func (assert Int32Assertions) LessThan(other int32) {
+	assert.t.Helper()
+
 	if assert.num >= other {
 		assert.Failed(`expected %s to be less than %d, but it was %d`, assert.name, other, assert.num)
 	}

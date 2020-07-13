@@ -26,6 +26,8 @@ func (assert Assertions) When(msg string) Assertions {
 
 // Failed outputs the final error message to *testing.T.
 func (assert Assertions) Failed(format string, args ...interface{}) {
+	assert.t.Helper()
+
 	local := fmt.Sprintf(format, args...)
 
 	if assert.msg != "" {
@@ -38,6 +40,8 @@ func (assert Assertions) Failed(format string, args ...interface{}) {
 
 // Fatal outputs the final error message to *testing.T and exits.
 func (assert Assertions) Fatal(format string, args ...interface{}) {
+	assert.t.Helper()
+
 	local := fmt.Sprintf(format, args...)
 
 	if assert.msg != "" {

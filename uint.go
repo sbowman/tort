@@ -5,64 +5,72 @@ import (
 	"reflect"
 )
 
-// Code generated from templates/ints.tmpl; DO NOT EDIT.
+// Code generated from templates/uints.tmpl; DO NOT EDIT.
 
-// IntAssertions are tests around integer (int) values.
-type IntAssertions struct {
+// UintAssertions are tests around integer (uint) values.
+type UintAssertions struct {
 	Assertions
 	name string
-	num int
+	num  uint
 }
 
-// Int identifies an integer variable value and returns test functions for its values.
-func (assert Assertions) Int(value int) IntAssertions {
-	return IntAssertions{
+// Uint identifies an integer variable value and returns test functions for its values.
+func (assert Assertions) Uint(value uint) UintAssertions {
+	return UintAssertions{
 		Assertions: assert,
-		name: "int",
-		num: value,
+		name:       "uint",
+		num:        value,
 	}
 }
 
-// Int looks for the given struct field, confirms it's an int, and returns the assertions valid for
+// Uint looks for the given struct field, confirms it's an uint, and returns the assertions valid for
 // the integer.
-func (assert StructAssertions) Int(field string) IntAssertions {
+func (assert StructAssertions) Uint(field string) UintAssertions {
 	name := fmt.Sprintf("%s.%s", assert.Type(), field)
 	property := assert.Field(field)
 
-	if property.Kind() != reflect.Int {
-		assert.Fatal("field %s is not an int", name)
+	if property.Kind() != reflect.Uint {
+		assert.Fatal("field %s is not an uint", name)
 	}
 
-	return IntAssertions{
+	return UintAssertions{
 		Assertions: assert.Assertions,
-		name: name,
-		num: int(property.Int()),
+		name:       name,
+		num:        uint(property.Uint()),
 	}
 }
 
 // Equals generates an error if the integer value isn't the same as other.
-func (assert IntAssertions) Equals(other int) {
+func (assert UintAssertions) Equals(other uint) {
+	assert.t.Helper()
+
 	if assert.num != other {
 		assert.Failed(`expected %s to be %d, but it was %d`, assert.name, other, assert.num)
 	}
 }
 
 // Equals generates an error if the integer value is the same as the other.
-func (assert IntAssertions) NotEquals(other int) {
+func (assert UintAssertions) NotEquals(other uint) {
+	assert.t.Helper()
+
 	if assert.num == other {
 		assert.Failed(`expected %s to not be %d`, assert.name, other)
 	}
 }
 
 // GreaterThan generates an error if the integer value is less than or equal to the other.
-func (assert IntAssertions) GreaterThan(other int) {
+func (assert UintAssertions) GreaterThan(other uint) {
+	assert.t.Helper()
+
 	if assert.num <= other {
 		assert.Failed(`expected %s to be greater than %d, but it was %d`, assert.name, other, assert.num)
 	}
 }
 
 // LessThan generates an error if the integer value is greater than or equal to the other.
-func (assert IntAssertions) LessThan(other int) {
+func (assert UintAssertions) LessThan(other uint) {
+	assert.t.Helper()
+
 	if assert.num >= other {
 		assert.Failed(`expected %s to be less than %d, but it was %d`, assert.name, other, assert.num)
 	}

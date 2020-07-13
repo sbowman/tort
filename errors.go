@@ -29,10 +29,16 @@ func (assert ErrorAssertions) IsNotNil() {
 	}
 }
 
-// Equal checks that the expected error was generated.
-func (assert ErrorAssertions) Equal(expected error) {
+// Equals checks that the expected error was generated.
+func (assert ErrorAssertions) Equals(expected error) {
 	if assert.err != expected {
-		assert.Failed(`expected error "%s", but got "%s"`, expected, assert.err)
+		assert.Failed(`expected error "%s" to be "%s"`, expected, assert.err)
 	}
 }
 
+// NotEquals checks that the given error was not generated.
+func (assert ErrorAssertions) NotEquals(expected error) {
+	if assert.err == expected {
+		assert.Failed(`expected error "%s" not to be "%s"`, expected, assert.err)
+	}
+}

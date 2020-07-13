@@ -11,15 +11,15 @@ import (
 type IntAssertions struct {
 	Assertions
 	name string
-	num int
+	num  int
 }
 
 // Int identifies an integer variable value and returns test functions for its values.
 func (assert Assertions) Int(value int) IntAssertions {
 	return IntAssertions{
 		Assertions: assert,
-		name: "int",
-		num: value,
+		name:       "int",
+		num:        value,
 	}
 }
 
@@ -35,13 +35,15 @@ func (assert StructAssertions) Int(field string) IntAssertions {
 
 	return IntAssertions{
 		Assertions: assert.Assertions,
-		name: name,
-		num: int(property.Int()),
+		name:       name,
+		num:        int(property.Int()),
 	}
 }
 
 // Equals generates an error if the integer value isn't the same as other.
 func (assert IntAssertions) Equals(other int) {
+	assert.t.Helper()
+
 	if assert.num != other {
 		assert.Failed(`expected %s to be %d, but it was %d`, assert.name, other, assert.num)
 	}
@@ -49,6 +51,8 @@ func (assert IntAssertions) Equals(other int) {
 
 // Equals generates an error if the integer value is the same as the other.
 func (assert IntAssertions) NotEquals(other int) {
+	assert.t.Helper()
+
 	if assert.num == other {
 		assert.Failed(`expected %s to not be %d`, assert.name, other)
 	}
@@ -56,6 +60,8 @@ func (assert IntAssertions) NotEquals(other int) {
 
 // GreaterThan generates an error if the integer value is less than or equal to the other.
 func (assert IntAssertions) GreaterThan(other int) {
+	assert.t.Helper()
+
 	if assert.num <= other {
 		assert.Failed(`expected %s to be greater than %d, but it was %d`, assert.name, other, assert.num)
 	}
@@ -63,6 +69,8 @@ func (assert IntAssertions) GreaterThan(other int) {
 
 // LessThan generates an error if the integer value is greater than or equal to the other.
 func (assert IntAssertions) LessThan(other int) {
+	assert.t.Helper()
+
 	if assert.num >= other {
 		assert.Failed(`expected %s to be less than %d, but it was %d`, assert.name, other, assert.num)
 	}

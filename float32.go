@@ -11,21 +11,21 @@ import (
 type Float32Assertions struct {
 	Assertions
 	name string
-	num float32
+	num  float32
 }
 
 // Float32 identifies an float variable value and returns test functions for its values.
-func (assert Assertions) Float32(value float32) FloatAssertions {
-	return FloatAssertions{
+func (assert Assertions) Float32(value float32) Float32Assertions {
+	return Float32Assertions{
 		Assertions: assert,
-		name: "float32",
-		num: value,
+		name:       "float32",
+		num:        value,
 	}
 }
 
 // Float looks for the given struct field, confirms it's an float32, and returns the assertions valid for
 // the float.
-func (assert StructAssertions) Float32(field string) FloatAssertions {
+func (assert StructAssertions) Float32(field string) Float32Assertions {
 	name := fmt.Sprintf("%s.%s", assert.Type(), field)
 	property := assert.Field(field)
 
@@ -33,37 +33,45 @@ func (assert StructAssertions) Float32(field string) FloatAssertions {
 		assert.Fatal("field %s is not an float32", name)
 	}
 
-	return FloatAssertions{
+	return Float32Assertions{
 		Assertions: assert.Assertions,
-		name: name,
-		num: float32(property.Float()),
+		name:       name,
+		num:        float32(property.Float()),
 	}
 }
 
 // Equals generates an error if the float value isn't the same as other.
 func (assert Float32Assertions) Equals(other float32) {
+	assert.t.Helper()
+
 	if assert.num != other {
-		assert.Failed(`expected %s to be %d, but it was %d`, assert.name, other, assert.num)
+		assert.Failed(`expected %s to be %f, but it was %f`, assert.name, other, assert.num)
 	}
 }
 
 // Equals generates an error if the float value is the same as the other.
 func (assert Float32Assertions) NotEquals(other float32) {
+	assert.t.Helper()
+
 	if assert.num == other {
-		assert.Failed(`expected %s to not be %d`, assert.name, other)
+		assert.Failed(`expected %s to not be %f`, assert.name, other)
 	}
 }
 
 // GreaterThan generates an error if the float value is less than or equal to the other.
 func (assert Float32Assertions) GreaterThan(other float32) {
+	assert.t.Helper()
+
 	if assert.num <= other {
-		assert.Failed(`expected %s to be greater than %d, but it was %d`, assert.name, other, assert.num)
+		assert.Failed(`expected %s to be greater than %f, but it was %f`, assert.name, other, assert.num)
 	}
 }
 
 // LessThan generates an error if the float value is greater than or equal to the other.
 func (assert Float32Assertions) LessThan(other float32) {
+	assert.t.Helper()
+
 	if assert.num >= other {
-		assert.Failed(`expected %s to be less than %d, but it was %d`, assert.name, other, assert.num)
+		assert.Failed(`expected %s to be less than %f, but it was %f`, assert.name, other, assert.num)
 	}
 }

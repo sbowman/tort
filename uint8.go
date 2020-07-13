@@ -5,64 +5,72 @@ import (
 	"reflect"
 )
 
-// Code generated from templates/ints.tmpl; DO NOT EDIT.
+// Code generated from templates/uints.tmpl; DO NOT EDIT.
 
-// Int8Assertions are tests around integer (int8) values.
-type Int8Assertions struct {
+// Uint8Assertions are tests around integer (uint8) values.
+type Uint8Assertions struct {
 	Assertions
 	name string
-	num int8
+	num  uint8
 }
 
-// Int8 identifies an integer variable value and returns test functions for its values.
-func (assert Assertions) Int8(value int8) IntAssertions {
-	return IntAssertions{
+// Uint8 identifies an integer variable value and returns test functions for its values.
+func (assert Assertions) Uint8(value uint8) Uint8Assertions {
+	return Uint8Assertions{
 		Assertions: assert,
-		name: "int8",
-		num: value,
+		name:       "uint8",
+		num:        value,
 	}
 }
 
-// Int looks for the given struct field, confirms it's an int8, and returns the assertions valid for
+// Uint looks for the given struct field, confirms it's an uint8, and returns the assertions valid for
 // the integer.
-func (assert StructAssertions) Int8(field string) IntAssertions {
+func (assert StructAssertions) Uint8(field string) Uint8Assertions {
 	name := fmt.Sprintf("%s.%s", assert.Type(), field)
 	property := assert.Field(field)
 
-	if property.Kind() != reflect.Int8 {
-		assert.Fatal("field %s is not an int8", name)
+	if property.Kind() != reflect.Uint8 {
+		assert.Fatal("field %s is not an uint8", name)
 	}
 
-	return IntAssertions{
+	return Uint8Assertions{
 		Assertions: assert.Assertions,
-		name: name,
-		num: int8(property.Int()),
+		name:       name,
+		num:        uint8(property.Uint()),
 	}
 }
 
 // Equals generates an error if the integer value isn't the same as other.
-func (assert Int8Assertions) Equals(other int8) {
+func (assert Uint8Assertions) Equals(other uint8) {
+	assert.t.Helper()
+
 	if assert.num != other {
 		assert.Failed(`expected %s to be %d, but it was %d`, assert.name, other, assert.num)
 	}
 }
 
 // Equals generates an error if the integer value is the same as the other.
-func (assert Int8Assertions) NotEquals(other int8) {
+func (assert Uint8Assertions) NotEquals(other uint8) {
+	assert.t.Helper()
+
 	if assert.num == other {
 		assert.Failed(`expected %s to not be %d`, assert.name, other)
 	}
 }
 
 // GreaterThan generates an error if the integer value is less than or equal to the other.
-func (assert Int8Assertions) GreaterThan(other int8) {
+func (assert Uint8Assertions) GreaterThan(other uint8) {
+	assert.t.Helper()
+
 	if assert.num <= other {
 		assert.Failed(`expected %s to be greater than %d, but it was %d`, assert.name, other, assert.num)
 	}
 }
 
 // LessThan generates an error if the integer value is greater than or equal to the other.
-func (assert Int8Assertions) LessThan(other int8) {
+func (assert Uint8Assertions) LessThan(other uint8) {
+	assert.t.Helper()
+
 	if assert.num >= other {
 		assert.Failed(`expected %s to be less than %d, but it was %d`, assert.name, other, assert.num)
 	}
