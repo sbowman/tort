@@ -98,16 +98,12 @@ func (assert StructAssertions) Type() string {
 	return reflect.TypeOf(assert.obj).Name()
 }
 
-// Field verifies a field exists and returns it.  Fatally errors out if the field is missing.
+// Field verifies a field exists and returns it.
 func (assert StructAssertions) Field(name string) reflect.Value {
 	assert.t.Helper()
 
 	value := reflect.ValueOf(assert.obj)
 	field := value.FieldByName(name)
-
-	if field.IsZero() {
-		assert.Fatal("field %s is not present", name)
-	}
 
 	return field
 }
