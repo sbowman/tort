@@ -3,6 +3,7 @@ package tort
 import (
 	"fmt"
 	"reflect"
+    "strconv"
 )
 
 // Code generated from templates/floats.tmpl; DO NOT EDIT.
@@ -30,7 +31,7 @@ func (assert StructAssertions) Float{{.Bits}}(field string) Float{{.Bits}}Assert
 	property := assert.Field(field)
 
 	if property.Kind() != reflect.Float{{.Bits}} {
-		assert.Fatal("field %s is not an float{{.Bits}}", name)
+		assert.Fatal("field %s is not a float{{.Bits}}", name)
 	}
 
 	return Float{{.Bits}}Assertions{
@@ -38,6 +39,23 @@ func (assert StructAssertions) Float{{.Bits}}(field string) Float{{.Bits}}Assert
 		name: name,
 		num: float{{.Bits}}(property.Float()),
 	}
+}
+
+// Float looks for the given float element, confirms it's an float{{.Bits}}, and returns the assertions valid for
+// the float.
+func (assert SliceAssertions) Float{{.Bits}}(idx int) Float{{.Bits}}Assertions {
+    name := strconv.Itoa(idx)
+    property := assert.Element(idx)
+
+    if property.Kind() != reflect.Float{{.Bits}} {
+        assert.Fatal("element %d is not a float{{.Bits}}", idx)
+    }
+
+    return Float{{.Bits}}Assertions{
+        Assertions: assert.Assertions,
+        name: name,
+        num: float{{.Bits}}(property.Float()),
+    }
 }
 
 // Equals generates an error if the float value isn't the same as other.

@@ -3,6 +3,7 @@ package tort
 import (
 	"fmt"
 	"reflect"
+	"strconv"
 )
 
 // Code generated from templates/uints.tmpl; DO NOT EDIT.
@@ -31,6 +32,23 @@ func (assert StructAssertions) Uint(field string) UintAssertions {
 
 	if property.Kind() != reflect.Uint {
 		assert.Fatal("field %s is not an uint", name)
+	}
+
+	return UintAssertions{
+		Assertions: assert.Assertions,
+		name:       name,
+		num:        uint(property.Uint()),
+	}
+}
+
+// Int looks for the given slice element, confirms it's an int, and returns the assertions valid for
+// the integer.
+func (assert SliceAssertions) Uint(idx int) UintAssertions {
+	name := strconv.Itoa(idx)
+	property := assert.Element(idx)
+
+	if property.Kind() != reflect.Uint {
+		assert.Fatal("element %d is not an uint", idx)
 	}
 
 	return UintAssertions{

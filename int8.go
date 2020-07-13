@@ -3,6 +3,7 @@ package tort
 import (
 	"fmt"
 	"reflect"
+	"strconv"
 )
 
 // Code generated from templates/ints.tmpl; DO NOT EDIT.
@@ -23,7 +24,7 @@ func (assert Assertions) Int8(value int8) Int8Assertions {
 	}
 }
 
-// Int looks for the given struct field, confirms it's an int8, and returns the assertions valid for
+// Int8 looks for the given struct field, confirms it's an int8, and returns the assertions valid for
 // the integer.
 func (assert StructAssertions) Int8(field string) Int8Assertions {
 	name := fmt.Sprintf("%s.%s", assert.Type(), field)
@@ -31,6 +32,23 @@ func (assert StructAssertions) Int8(field string) Int8Assertions {
 
 	if property.Kind() != reflect.Int8 {
 		assert.Fatal("field %s is not an int8", name)
+	}
+
+	return Int8Assertions{
+		Assertions: assert.Assertions,
+		name:       name,
+		num:        int8(property.Int()),
+	}
+}
+
+// Int8 looks for the given slice element, confirms it's an int8, and returns the assertions valid for
+// the integer.
+func (assert SliceAssertions) Int8(idx int) Int8Assertions {
+	name := strconv.Itoa(idx)
+	property := assert.Element(idx)
+
+	if property.Kind() != reflect.Int8 {
+		assert.Fatal("element %d is not an int8", idx)
 	}
 
 	return Int8Assertions{

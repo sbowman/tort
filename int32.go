@@ -3,6 +3,7 @@ package tort
 import (
 	"fmt"
 	"reflect"
+	"strconv"
 )
 
 // Code generated from templates/ints.tmpl; DO NOT EDIT.
@@ -23,7 +24,7 @@ func (assert Assertions) Int32(value int32) Int32Assertions {
 	}
 }
 
-// Int looks for the given struct field, confirms it's an int32, and returns the assertions valid for
+// Int32 looks for the given struct field, confirms it's an int32, and returns the assertions valid for
 // the integer.
 func (assert StructAssertions) Int32(field string) Int32Assertions {
 	name := fmt.Sprintf("%s.%s", assert.Type(), field)
@@ -31,6 +32,23 @@ func (assert StructAssertions) Int32(field string) Int32Assertions {
 
 	if property.Kind() != reflect.Int32 {
 		assert.Fatal("field %s is not an int32", name)
+	}
+
+	return Int32Assertions{
+		Assertions: assert.Assertions,
+		name:       name,
+		num:        int32(property.Int()),
+	}
+}
+
+// Int32 looks for the given slice element, confirms it's an int32, and returns the assertions valid for
+// the integer.
+func (assert SliceAssertions) Int32(idx int) Int32Assertions {
+	name := strconv.Itoa(idx)
+	property := assert.Element(idx)
+
+	if property.Kind() != reflect.Int32 {
+		assert.Fatal("element %d is not an int32", idx)
 	}
 
 	return Int32Assertions{

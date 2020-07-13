@@ -3,6 +3,7 @@ package tort
 import (
 	"fmt"
 	"reflect"
+    "strconv"
 )
 
 // Code generated from templates/uints.tmpl; DO NOT EDIT.
@@ -38,6 +39,23 @@ func (assert StructAssertions) Uint{{.Bits}}(field string) Uint{{.Bits}}Assertio
 		name: name,
 		num: uint{{.Bits}}(property.Uint()),
 	}
+}
+
+// Int{{.Bits}} looks for the given slice element, confirms it's an int{{.Bits}}, and returns the assertions valid for
+// the integer.
+func (assert SliceAssertions) Uint{{.Bits}}(idx int) Uint{{.Bits}}Assertions {
+    name := strconv.Itoa(idx)
+    property := assert.Element(idx)
+
+    if property.Kind() != reflect.Uint{{.Bits}} {
+        assert.Fatal("element %d is not an uint{{.Bits}}", idx)
+    }
+
+    return Uint{{.Bits}}Assertions{
+        Assertions: assert.Assertions,
+        name: name,
+        num: uint{{.Bits}}(property.Uint()),
+    }
 }
 
 // Equals generates an error if the integer value isn't the same as other.

@@ -8,8 +8,31 @@ import (
 // SliceAssertions are tests around slice values.
 type SliceAssertions struct {
 	Assertions
-	name string
+	name  string
 	slice []interface{}
+}
+
+// Slice identifies a slice variable value and returns test functions for its values.  If the value
+// isn't a slice, generates a fatal error.
+func (assert Assertions) Slice(value interface{}) SliceAssertions {
+	if reflect.TypeOf(value).Kind() != reflect.Slice {
+		assert.Fatal("%v is not a slice", value)
+	}
+
+	// Have to jump through a few hoops to convert any incoming slice into somethign we can test
+	v := reflect.ValueOf(value)
+
+	var slice []interface{}
+	for idx := 0; idx < v.Len(); idx++ {
+		element := v.Index(idx)
+		slice = append(slice, element.Interface())
+	}
+
+	return SliceAssertions{
+		Assertions: assert,
+		name:       "slice",
+		slice:      slice,
+	}
 }
 
 // Slice identifies a slice field on a struct.  If the field isn't present, or isn't a slice,
@@ -29,8 +52,8 @@ func (assert StructAssertions) Slice(field string) SliceAssertions {
 
 	return SliceAssertions{
 		Assertions: assert.Assertions,
-		name: name,
-		slice: slice,
+		name:       name,
+		slice:      slice,
 	}
 }
 
@@ -56,8 +79,8 @@ func (assert SliceAssertions) Length(expected int) {
 func (assert SliceAssertions) MoreThan(expected int) {
 	assert.t.Helper()
 
-	if len(assert.slice) > expected {
-		assert.Failed(`expected %s to have more than %d elements; has %d instead`, assert.name, expected, len(assert.slice))
+	if len(assert.slice) <= expected {
+		assert.Failed(`expected %s to have more than %d elements but it has %d elements`, assert.name, expected, len(assert.slice))
 	}
 }
 
@@ -65,7 +88,18 @@ func (assert SliceAssertions) MoreThan(expected int) {
 func (assert SliceAssertions) FewerThan(expected int) {
 	assert.t.Helper()
 
-	if len(assert.slice) < expected {
-		assert.Failed(`expected %s to have fewer than %d elements; has %d instead`, assert.name, expected, len(assert.slice))
+	if len(assert.slice) >= expected {
+		assert.Failed(`expected %s to have fewer than %d elementsbut it has %d elements`, assert.name, expected, len(assert.slice))
 	}
 }
+
+// Element looks up the element from the slice array.
+func (assert SliceAssertions) Element(idx int) reflect.Value {
+	if idx < 0 || idx > len(assert.slice) {
+		assert.Fatal("index %d out of range", idx)
+	}
+
+	item := assert.slice[idx]
+	return reflect.ValueOf(item)
+}
+

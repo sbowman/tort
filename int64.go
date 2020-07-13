@@ -3,6 +3,7 @@ package tort
 import (
 	"fmt"
 	"reflect"
+	"strconv"
 )
 
 // Code generated from templates/ints.tmpl; DO NOT EDIT.
@@ -23,7 +24,7 @@ func (assert Assertions) Int64(value int64) Int64Assertions {
 	}
 }
 
-// Int looks for the given struct field, confirms it's an int64, and returns the assertions valid for
+// Int64 looks for the given struct field, confirms it's an int64, and returns the assertions valid for
 // the integer.
 func (assert StructAssertions) Int64(field string) Int64Assertions {
 	name := fmt.Sprintf("%s.%s", assert.Type(), field)
@@ -31,6 +32,23 @@ func (assert StructAssertions) Int64(field string) Int64Assertions {
 
 	if property.Kind() != reflect.Int64 {
 		assert.Fatal("field %s is not an int64", name)
+	}
+
+	return Int64Assertions{
+		Assertions: assert.Assertions,
+		name:       name,
+		num:        int64(property.Int()),
+	}
+}
+
+// Int64 looks for the given slice element, confirms it's an int64, and returns the assertions valid for
+// the integer.
+func (assert SliceAssertions) Int64(idx int) Int64Assertions {
+	name := strconv.Itoa(idx)
+	property := assert.Element(idx)
+
+	if property.Kind() != reflect.Int64 {
+		assert.Fatal("element %d is not an int64", idx)
 	}
 
 	return Int64Assertions{

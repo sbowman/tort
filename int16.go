@@ -3,6 +3,7 @@ package tort
 import (
 	"fmt"
 	"reflect"
+	"strconv"
 )
 
 // Code generated from templates/ints.tmpl; DO NOT EDIT.
@@ -23,7 +24,7 @@ func (assert Assertions) Int16(value int16) Int16Assertions {
 	}
 }
 
-// Int looks for the given struct field, confirms it's an int16, and returns the assertions valid for
+// Int16 looks for the given struct field, confirms it's an int16, and returns the assertions valid for
 // the integer.
 func (assert StructAssertions) Int16(field string) Int16Assertions {
 	name := fmt.Sprintf("%s.%s", assert.Type(), field)
@@ -31,6 +32,23 @@ func (assert StructAssertions) Int16(field string) Int16Assertions {
 
 	if property.Kind() != reflect.Int16 {
 		assert.Fatal("field %s is not an int16", name)
+	}
+
+	return Int16Assertions{
+		Assertions: assert.Assertions,
+		name:       name,
+		num:        int16(property.Int()),
+	}
+}
+
+// Int16 looks for the given slice element, confirms it's an int16, and returns the assertions valid for
+// the integer.
+func (assert SliceAssertions) Int16(idx int) Int16Assertions {
+	name := strconv.Itoa(idx)
+	property := assert.Element(idx)
+
+	if property.Kind() != reflect.Int16 {
+		assert.Fatal("element %d is not an int16", idx)
 	}
 
 	return Int16Assertions{

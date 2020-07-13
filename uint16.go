@@ -3,6 +3,7 @@ package tort
 import (
 	"fmt"
 	"reflect"
+	"strconv"
 )
 
 // Code generated from templates/uints.tmpl; DO NOT EDIT.
@@ -31,6 +32,23 @@ func (assert StructAssertions) Uint16(field string) Uint16Assertions {
 
 	if property.Kind() != reflect.Uint16 {
 		assert.Fatal("field %s is not an uint16", name)
+	}
+
+	return Uint16Assertions{
+		Assertions: assert.Assertions,
+		name:       name,
+		num:        uint16(property.Uint()),
+	}
+}
+
+// Int16 looks for the given slice element, confirms it's an int16, and returns the assertions valid for
+// the integer.
+func (assert SliceAssertions) Uint16(idx int) Uint16Assertions {
+	name := strconv.Itoa(idx)
+	property := assert.Element(idx)
+
+	if property.Kind() != reflect.Uint16 {
+		assert.Fatal("element %d is not an uint16", idx)
 	}
 
 	return Uint16Assertions{

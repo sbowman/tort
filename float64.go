@@ -3,6 +3,7 @@ package tort
 import (
 	"fmt"
 	"reflect"
+	"strconv"
 )
 
 // Code generated from templates/floats.tmpl; DO NOT EDIT.
@@ -30,7 +31,24 @@ func (assert StructAssertions) Float64(field string) Float64Assertions {
 	property := assert.Field(field)
 
 	if property.Kind() != reflect.Float64 {
-		assert.Fatal("field %s is not an float64", name)
+		assert.Fatal("field %s is not a float64", name)
+	}
+
+	return Float64Assertions{
+		Assertions: assert.Assertions,
+		name:       name,
+		num:        float64(property.Float()),
+	}
+}
+
+// Float looks for the given float element, confirms it's an float64, and returns the assertions valid for
+// the float.
+func (assert SliceAssertions) Float64(idx int) Float64Assertions {
+	name := strconv.Itoa(idx)
+	property := assert.Element(idx)
+
+	if property.Kind() != reflect.Float64 {
+		assert.Fatal("element %d is not a float64", idx)
 	}
 
 	return Float64Assertions{

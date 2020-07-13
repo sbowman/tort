@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"reflect"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
@@ -31,6 +32,22 @@ func (assert StructAssertions) String(field string) StringAssertions {
 
 	if property.Kind() != reflect.String {
 		assert.Fatal("field %s is not a string", name)
+	}
+
+	return StringAssertions{
+		Assertions: assert.Assertions,
+		name: name,
+		str: property.String(),
+	}
+}
+
+// String looks up an element in a slice expecting it to be a string.
+func (assert SliceAssertions) String(idx int) StringAssertions {
+	name := strconv.Itoa(idx)
+	property := assert.Element(idx)
+
+	if property.Kind() != reflect.String {
+		assert.Fatal("element %d is not a string", idx)
 	}
 
 	return StringAssertions{

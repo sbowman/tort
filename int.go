@@ -3,6 +3,7 @@ package tort
 import (
 	"fmt"
 	"reflect"
+	"strconv"
 )
 
 // Code generated from templates/ints.tmpl; DO NOT EDIT.
@@ -31,6 +32,23 @@ func (assert StructAssertions) Int(field string) IntAssertions {
 
 	if property.Kind() != reflect.Int {
 		assert.Fatal("field %s is not an int", name)
+	}
+
+	return IntAssertions{
+		Assertions: assert.Assertions,
+		name:       name,
+		num:        int(property.Int()),
+	}
+}
+
+// Int looks for the given slice element, confirms it's an int, and returns the assertions valid for
+// the integer.
+func (assert SliceAssertions) Int(idx int) IntAssertions {
+	name := strconv.Itoa(idx)
+	property := assert.Element(idx)
+
+	if property.Kind() != reflect.Int {
+		assert.Fatal("element %d is not an int", idx)
 	}
 
 	return IntAssertions{

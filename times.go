@@ -2,6 +2,7 @@ package tort
 
 import (
 	"fmt"
+	"strconv"
 	"time"
 )
 
@@ -39,6 +40,27 @@ func (assert StructAssertions) Time(field string) TimeAssertions {
 			val = i.Assert()
 		} else {
 			assert.Fatal(`%s is not time; it's "%#v"`, name, property.Interface())
+		}
+	}
+
+	return TimeAssertions{
+		Assertions: assert.Assertions,
+		name: name,
+		time: val,
+	}
+}
+
+// String looks up an element in a slice expecting it to be a time.Time, or fulfills TimeAssertion.
+func (assert SliceAssertions) Time(idx int) TimeAssertions {
+	name := strconv.Itoa(idx)
+	property := assert.Element(idx)
+
+	val, ok := property.Interface().(time.Time)
+	if !ok {
+		if i, ok := property.Interface().(TimeAssertion); ok {
+			val = i.Assert()
+		} else {
+			assert.Fatal(`element %d is not time; it's "%#v"`, idx, property.Interface())
 		}
 	}
 
@@ -130,6 +152,24 @@ func (assert StructAssertions) Duration(field string) DurationAssertions {
 	}
 }
 
+// Duration identifies a duration element in the slace.  If the element isn't present, or isn't a
+// time.Duration, generates an error.
+func (assert SliceAssertions) Duration(idx int) DurationAssertions {
+	name := strconv.Itoa(idx)
+	property := assert.Element(idx)
+
+	val, ok := property.Interface().(time.Duration)
+	if !ok {
+		assert.Fatal(`%s is not a duration; it's "%#v"`, name, property.Interface())
+	}
+
+	return DurationAssertions{
+		Assertions: assert.Assertions,
+		name: name,
+		dur: val,
+	}
+}
+
 // Equals generates an error if the duration does not equal the other..
 func (assert DurationAssertions) Equals(other time.Duration) {
 	assert.t.Helper()
@@ -160,7 +200,7 @@ func (assert DurationAssertions) GreaterThan(other time.Duration) {
 // LessThan generates an error if the duration is greater than or equal to the other..
 func (assert DurationAssertions) LessThan(other time.Duration) {
 	assert.t.Helper()
-	
+
 	if assert.dur >= other {
 		assert.Failed(`%s duration of %s is greater than %s`, assert.name, assert.dur, other)
 	}
