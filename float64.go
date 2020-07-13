@@ -17,6 +17,8 @@ type Float64Assertions struct {
 
 // Float64 identifies an float variable value and returns test functions for its values.
 func (assert Assertions) Float64(value float64) Float64Assertions {
+	assert.t.Helper()
+
 	return Float64Assertions{
 		Assertions: assert,
 		name:       "float64",
@@ -27,6 +29,8 @@ func (assert Assertions) Float64(value float64) Float64Assertions {
 // Float looks for the given struct field, confirms it's an float64, and returns the assertions valid for
 // the float.
 func (assert StructAssertions) Float64(field string) Float64Assertions {
+	assert.t.Helper()
+
 	name := fmt.Sprintf("%s.%s", assert.Type(), field)
 	property := assert.Field(field)
 
@@ -44,6 +48,8 @@ func (assert StructAssertions) Float64(field string) Float64Assertions {
 // Float looks for the given float element, confirms it's an float64, and returns the assertions valid for
 // the float.
 func (assert SliceAssertions) Float64(idx int) Float64Assertions {
+	assert.t.Helper()
+
 	name := strconv.Itoa(idx)
 	property := assert.Element(idx)
 

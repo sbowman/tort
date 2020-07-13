@@ -17,6 +17,8 @@ type Int16Assertions struct {
 
 // Int16 identifies an integer variable value and returns test functions for its values.
 func (assert Assertions) Int16(value int16) Int16Assertions {
+	assert.t.Helper()
+
 	return Int16Assertions{
 		Assertions: assert,
 		name:       "int16",
@@ -27,6 +29,8 @@ func (assert Assertions) Int16(value int16) Int16Assertions {
 // Int16 looks for the given struct field, confirms it's an int16, and returns the assertions valid for
 // the integer.
 func (assert StructAssertions) Int16(field string) Int16Assertions {
+	assert.t.Helper()
+
 	name := fmt.Sprintf("%s.%s", assert.Type(), field)
 	property := assert.Field(field)
 
@@ -44,6 +48,8 @@ func (assert StructAssertions) Int16(field string) Int16Assertions {
 // Int16 looks for the given slice element, confirms it's an int16, and returns the assertions valid for
 // the integer.
 func (assert SliceAssertions) Int16(idx int) Int16Assertions {
+	assert.t.Helper()
+
 	name := strconv.Itoa(idx)
 	property := assert.Element(idx)
 

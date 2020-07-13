@@ -17,6 +17,8 @@ type Int64Assertions struct {
 
 // Int64 identifies an integer variable value and returns test functions for its values.
 func (assert Assertions) Int64(value int64) Int64Assertions {
+	assert.t.Helper()
+
 	return Int64Assertions{
 		Assertions: assert,
 		name:       "int64",
@@ -27,6 +29,8 @@ func (assert Assertions) Int64(value int64) Int64Assertions {
 // Int64 looks for the given struct field, confirms it's an int64, and returns the assertions valid for
 // the integer.
 func (assert StructAssertions) Int64(field string) Int64Assertions {
+	assert.t.Helper()
+
 	name := fmt.Sprintf("%s.%s", assert.Type(), field)
 	property := assert.Field(field)
 
@@ -44,6 +48,8 @@ func (assert StructAssertions) Int64(field string) Int64Assertions {
 // Int64 looks for the given slice element, confirms it's an int64, and returns the assertions valid for
 // the integer.
 func (assert SliceAssertions) Int64(idx int) Int64Assertions {
+	assert.t.Helper()
+
 	name := strconv.Itoa(idx)
 	property := assert.Element(idx)
 

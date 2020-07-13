@@ -9,6 +9,8 @@ type ErrorAssertions struct {
 
 // Error assists in validating errors occurred.
 func (assert Assertions) Error(err error) ErrorAssertions {
+	assert.t.Helper()
+
 	return ErrorAssertions{
 		Assertions: assert,
 		err: err,

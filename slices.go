@@ -15,6 +15,8 @@ type SliceAssertions struct {
 // Slice identifies a slice variable value and returns test functions for its values.  If the value
 // isn't a slice, generates a fatal error.
 func (assert Assertions) Slice(value interface{}) SliceAssertions {
+	assert.t.Helper()
+
 	if reflect.TypeOf(value).Kind() != reflect.Slice {
 		assert.Fatal("%v is not a slice", value)
 	}
@@ -38,6 +40,8 @@ func (assert Assertions) Slice(value interface{}) SliceAssertions {
 // Slice identifies a slice field on a struct.  If the field isn't present, or isn't a slice,
 // generates an error.
 func (assert StructAssertions) Slice(field string) SliceAssertions {
+	assert.t.Helper()
+
 	name := fmt.Sprintf("%s.%s", assert.Type(), field)
 	property := assert.Field(field)
 
@@ -95,6 +99,8 @@ func (assert SliceAssertions) FewerThan(expected int) {
 
 // Element looks up the element from the slice array.
 func (assert SliceAssertions) Element(idx int) reflect.Value {
+	assert.t.Helper()
+
 	if idx < 0 || idx > len(assert.slice) {
 		assert.Fatal("index %d out of range", idx)
 	}

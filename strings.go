@@ -17,6 +17,8 @@ type StringAssertions struct {
 
 // String identifies a string variable value and returns test functions for its values.
 func (assert Assertions) String(value string) StringAssertions {
+	assert.t.Helper()
+
 	return StringAssertions{
 		Assertions: assert,
 		name: "string",
@@ -27,6 +29,8 @@ func (assert Assertions) String(value string) StringAssertions {
 // String identifies a string field on a struct.  If the field isn't present, or isn't a string,
 // generates an error.
 func (assert StructAssertions) String(field string) StringAssertions {
+	assert.t.Helper()
+
 	name := fmt.Sprintf("%s.%s", assert.Type(), field)
 	property := assert.Field(field)
 
@@ -43,6 +47,8 @@ func (assert StructAssertions) String(field string) StringAssertions {
 
 // String looks up an element in a slice expecting it to be a string.
 func (assert SliceAssertions) String(idx int) StringAssertions {
+	assert.t.Helper()
+
 	name := strconv.Itoa(idx)
 	property := assert.Element(idx)
 

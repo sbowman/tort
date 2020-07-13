@@ -21,6 +21,8 @@ type TimeAssertions struct {
 
 // Time identifies a time.Time variable value and returns test functions for its values.
 func (assert Assertions) Time(value time.Time) TimeAssertions {
+	assert.t.Helper()
+
 	return TimeAssertions{
 		Assertions: assert,
 		name: "time.Time",
@@ -31,6 +33,8 @@ func (assert Assertions) Time(value time.Time) TimeAssertions {
 // Time identifies a time field on a struct.  If the field isn't present, or isn't a time.Time or
 // implements TimeAssertion, generates an error.
 func (assert StructAssertions) Time(field string) TimeAssertions {
+	assert.t.Helper()
+
 	name := fmt.Sprintf("%s.%s", assert.Type(), field)
 	property := assert.Field(field)
 
@@ -52,6 +56,8 @@ func (assert StructAssertions) Time(field string) TimeAssertions {
 
 // String looks up an element in a slice expecting it to be a time.Time, or fulfills TimeAssertion.
 func (assert SliceAssertions) Time(idx int) TimeAssertions {
+	assert.t.Helper()
+
 	name := strconv.Itoa(idx)
 	property := assert.Element(idx)
 
@@ -127,6 +133,8 @@ type DurationAssertions struct {
 
 // Duration identifies a time.Duration variable value and returns test functions for its values.
 func (assert Assertions) Duration(value time.Duration) DurationAssertions {
+	assert.t.Helper()
+
 	return DurationAssertions{
 		Assertions: assert,
 		name: "time.Duration",
@@ -137,6 +145,8 @@ func (assert Assertions) Duration(value time.Duration) DurationAssertions {
 // Duration identifies a duration field on a struct.  If the field isn't present, or isn't a
 // time.Duration, generates an error.
 func (assert StructAssertions) Duration(field string) DurationAssertions {
+	assert.t.Helper()
+
 	name := fmt.Sprintf("%s.%s", assert.Type(), field)
 	property := assert.Field(field)
 
@@ -155,6 +165,8 @@ func (assert StructAssertions) Duration(field string) DurationAssertions {
 // Duration identifies a duration element in the slace.  If the element isn't present, or isn't a
 // time.Duration, generates an error.
 func (assert SliceAssertions) Duration(idx int) DurationAssertions {
+	assert.t.Helper()
+
 	name := strconv.Itoa(idx)
 	property := assert.Element(idx)
 

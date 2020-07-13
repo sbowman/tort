@@ -17,6 +17,8 @@ type Float{{.Bits}}Assertions struct {
 
 // Float{{.Bits}} identifies an float variable value and returns test functions for its values.
 func (assert Assertions) Float{{.Bits}}(value float{{.Bits}}) Float{{.Bits}}Assertions {
+    assert.t.Helper()
+
 	return Float{{.Bits}}Assertions{
 		Assertions: assert,
 		name: "float{{.Bits}}",
@@ -27,6 +29,8 @@ func (assert Assertions) Float{{.Bits}}(value float{{.Bits}}) Float{{.Bits}}Asse
 // Float looks for the given struct field, confirms it's an float{{.Bits}}, and returns the assertions valid for
 // the float.
 func (assert StructAssertions) Float{{.Bits}}(field string) Float{{.Bits}}Assertions {
+    assert.t.Helper()
+
 	name := fmt.Sprintf("%s.%s", assert.Type(), field)
 	property := assert.Field(field)
 
@@ -44,6 +48,8 @@ func (assert StructAssertions) Float{{.Bits}}(field string) Float{{.Bits}}Assert
 // Float looks for the given float element, confirms it's an float{{.Bits}}, and returns the assertions valid for
 // the float.
 func (assert SliceAssertions) Float{{.Bits}}(idx int) Float{{.Bits}}Assertions {
+    assert.t.Helper()
+
     name := strconv.Itoa(idx)
     property := assert.Element(idx)
 

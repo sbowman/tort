@@ -17,6 +17,8 @@ type Uint16Assertions struct {
 
 // Uint16 identifies an integer variable value and returns test functions for its values.
 func (assert Assertions) Uint16(value uint16) Uint16Assertions {
+	assert.t.Helper()
+
 	return Uint16Assertions{
 		Assertions: assert,
 		name:       "uint16",
@@ -27,6 +29,8 @@ func (assert Assertions) Uint16(value uint16) Uint16Assertions {
 // Uint looks for the given struct field, confirms it's an uint16, and returns the assertions valid for
 // the integer.
 func (assert StructAssertions) Uint16(field string) Uint16Assertions {
+	assert.t.Helper()
+
 	name := fmt.Sprintf("%s.%s", assert.Type(), field)
 	property := assert.Field(field)
 
@@ -44,6 +48,8 @@ func (assert StructAssertions) Uint16(field string) Uint16Assertions {
 // Int16 looks for the given slice element, confirms it's an int16, and returns the assertions valid for
 // the integer.
 func (assert SliceAssertions) Uint16(idx int) Uint16Assertions {
+	assert.t.Helper()
+
 	name := strconv.Itoa(idx)
 	property := assert.Element(idx)
 

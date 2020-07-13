@@ -16,6 +16,8 @@ type StructAssertions struct {
 
 // Struct identifies assertions about an object.
 func (assert Assertions) Struct(obj interface{}) StructAssertions {
+	assert.t.Helper()
+
 	kind := reflect.ValueOf(obj).Kind()
 
 	var isnil bool
@@ -39,6 +41,8 @@ func (assert Assertions) Struct(obj interface{}) StructAssertions {
 
 // Struct identifies assertions about an object and returns the assertions around the struct.
 func (assert StructAssertions) Struct(field string) StructAssertions {
+	assert.t.Helper()
+
 	name := fmt.Sprintf("%s.%s", assert.Type(), field)
 	property := assert.Field(field)
 
@@ -55,6 +59,8 @@ func (assert StructAssertions) Struct(field string) StructAssertions {
 
 // Struct looks up an element in a slice expecting it to be a struct or a pointer to a struct.
 func (assert SliceAssertions) Struct(idx int) StructAssertions {
+	assert.t.Helper()
+
 	name := strconv.Itoa(idx)
 	property := assert.Element(idx)
 	kind := property.Kind()
@@ -81,6 +87,8 @@ func (assert SliceAssertions) Struct(idx int) StructAssertions {
 
 // Type returns the name of the struct.
 func (assert StructAssertions) Type() string {
+	assert.t.Helper()
+
 	kind := reflect.ValueOf(assert.obj).Kind()
 
 	if kind == reflect.Ptr {
@@ -92,6 +100,8 @@ func (assert StructAssertions) Type() string {
 
 // Field verifies a field exists and returns it.  Fatally errors out if the field is missing.
 func (assert StructAssertions) Field(name string) reflect.Value {
+	assert.t.Helper()
+
 	value := reflect.ValueOf(assert.obj)
 	field := value.FieldByName(name)
 

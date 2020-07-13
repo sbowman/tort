@@ -15,6 +15,8 @@ type BoolAssertions struct {
 
 // Bool identifies a bolean variable value and returns test functions for its values.
 func (assert Assertions) Bool(value bool) BoolAssertions {
+	assert.t.Helper()
+
 	return BoolAssertions{
 		Assertions: assert,
 		name: "bool",
@@ -25,6 +27,8 @@ func (assert Assertions) Bool(value bool) BoolAssertions {
 // Bool identifies a boolean field on a struct.  If the field isn't present, or isn't a bool,
 // generates an error.
 func (assert StructAssertions) Bool(field string) BoolAssertions {
+	assert.t.Helper()
+
 	name := fmt.Sprintf("%s.%s", assert.Type(), field)
 	property := assert.Field(field)
 
@@ -41,6 +45,8 @@ func (assert StructAssertions) Bool(field string) BoolAssertions {
 
 // Bool looks up an element in a slice expecting it to be a bool.
 func (assert SliceAssertions) Bool(idx int) BoolAssertions {
+	assert.t.Helper()
+
 	name := strconv.Itoa(idx)
 	property := assert.Element(idx)
 
