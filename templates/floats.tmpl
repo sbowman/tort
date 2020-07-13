@@ -15,8 +15,8 @@ type Float{{.Bits}}Assertions struct {
 }
 
 // Float{{.Bits}} identifies an float variable value and returns test functions for its values.
-func (assert Assertions) Float{{.Bits}}(value float{{.Bits}}) FloatAssertions {
-	return FloatAssertions{
+func (assert Assertions) Float{{.Bits}}(value float{{.Bits}}) Float{{.Bits}}Assertions {
+	return Float{{.Bits}}Assertions{
 		Assertions: assert,
 		name: "float{{.Bits}}",
 		num: value,
@@ -25,7 +25,7 @@ func (assert Assertions) Float{{.Bits}}(value float{{.Bits}}) FloatAssertions {
 
 // Float looks for the given struct field, confirms it's an float{{.Bits}}, and returns the assertions valid for
 // the float.
-func (assert StructAssertions) Float{{.Bits}}(field string) FloatAssertions {
+func (assert StructAssertions) Float{{.Bits}}(field string) Float{{.Bits}}Assertions {
 	name := fmt.Sprintf("%s.%s", assert.Type(), field)
 	property := assert.Field(field)
 
@@ -33,7 +33,7 @@ func (assert StructAssertions) Float{{.Bits}}(field string) FloatAssertions {
 		assert.Fatal("field %s is not an float{{.Bits}}", name)
 	}
 
-	return FloatAssertions{
+	return Float{{.Bits}}Assertions{
 		Assertions: assert.Assertions,
 		name: name,
 		num: float{{.Bits}}(property.Float()),
@@ -42,28 +42,36 @@ func (assert StructAssertions) Float{{.Bits}}(field string) FloatAssertions {
 
 // Equals generates an error if the float value isn't the same as other.
 func (assert Float{{.Bits}}Assertions) Equals(other float{{.Bits}}) {
+	assert.t.Helper()
+
 	if assert.num != other {
-		assert.Failed(`expected %s to be %d, but it was %d`, assert.name, other, assert.num)
+		assert.Failed(`expected %s to be %f, but it was %f`, assert.name, other, assert.num)
 	}
 }
 
 // Equals generates an error if the float value is the same as the other.
 func (assert Float{{.Bits}}Assertions) NotEquals(other float{{.Bits}}) {
+	assert.t.Helper()
+
 	if assert.num == other {
-		assert.Failed(`expected %s to not be %d`, assert.name, other)
+		assert.Failed(`expected %s to not be %f`, assert.name, other)
 	}
 }
 
 // GreaterThan generates an error if the float value is less than or equal to the other.
 func (assert Float{{.Bits}}Assertions) GreaterThan(other float{{.Bits}}) {
-	if assert.num <= other {
-		assert.Failed(`expected %s to be greater than %d, but it was %d`, assert.name, other, assert.num)
+    assert.t.Helper()
+
+    if assert.num <= other {
+		assert.Failed(`expected %s to be greater than %f, but it was %f`, assert.name, other, assert.num)
 	}
 }
 
 // LessThan generates an error if the float value is greater than or equal to the other.
 func (assert Float{{.Bits}}Assertions) LessThan(other float{{.Bits}}) {
-	if assert.num >= other {
-		assert.Failed(`expected %s to be less than %d, but it was %d`, assert.name, other, assert.num)
+    assert.t.Helper()
+
+    if assert.num >= other {
+		assert.Failed(`expected %s to be less than %f, but it was %f`, assert.name, other, assert.num)
 	}
 }

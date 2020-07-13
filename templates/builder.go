@@ -1,7 +1,9 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
+	"go/format"
 	"os"
 	"strconv"
 	"text/template"
@@ -57,44 +59,49 @@ func main() {
 			str = strconv.Itoa(bits)
 		}
 
-		// Integers
-		out, err := os.OpenFile(filename, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
-		if err != nil {
-			_, _ = fmt.Fprintf(os.Stderr, "Unable to open %s: %s\n", filename, err)
-			os.Exit(1)
-		}
+		data := struct{ Bits string }{str}
 
-		if err := ints.Execute(out, struct{Bits string}{str}); err != nil {
-			_, _ = fmt.Fprintf(os.Stderr, "Unable to generate %s: %s\n", filename, err)
-			os.Exit(1)
-		}
+		// Integers
+		Output(ints, filename, data)
 
 		// Unsigned integers
 		filename = "u" + filename
-		out, err = os.OpenFile(filename, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
-		if err != nil {
-			_, _ = fmt.Fprintf(os.Stderr, "Unable to open %s: %s\n", filename, err)
-			os.Exit(1)
-		}
-
-		if err := ints.Execute(out, struct{Bits string}{str}); err != nil {
-			_, _ = fmt.Fprintf(os.Stderr, "Unable to generate %s: %s\n", filename, err)
-			os.Exit(1)
-		}
+		Output(uints, filename, data)
 
 		// Floats
 		if bits > 16 {
 			filename = fmt.Sprintf("float%d.go", bits)
-			out, err = os.OpenFile(filename, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
-			if err != nil {
-				_, _ = fmt.Fprintf(os.Stderr, "Unable to open %s: %s\n", filename, err)
-				os.Exit(1)
-			}
-
-			if err := floats.Execute(out, struct{Bits string}{str}); err != nil {
-				_, _ = fmt.Fprintf(os.Stderr, "Unable to generate %s: %s\n", filename, err)
-				os.Exit(1)
-			}
+			Output(floats, filename, data)
 		}
+	}
+}
+
+// Output parses a template for a .go file, formats the file, and writes it to disk as the filename.
+func Output(tmpl *template.Template, filename string, data interface{}) {
+	var doc bytes.Buffer
+
+	// Integers
+	out, err := os.OpenFile(filename, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
+	if err != nil {
+		_, _ = fmt.Fprintf(os.Stderr, "Unable to open %s: %s\n", filename, err)
+		os.Exit(1)
+	}
+	defer out.Close()
+
+	if err := tmpl.Execute(&doc, data); err != nil {
+		_, _ = fmt.Fprintf(os.Stderr, "Unable to generate %s: %s\n", filename, err)
+		os.Exit(1)
+	}
+
+	formatted, err := format.Source(doc.Bytes())
+	if err != nil {
+		_, _ = fmt.Fprintf(os.Stderr, "Unable to format %s: %s\n", filename, err)
+		os.Exit(1)
+	}
+
+	_, err = out.Write(formatted)
+	if err != nil {
+		_, _ = fmt.Fprintf(os.Stderr, "Unable to format %s: %s\n", filename, err)
+		os.Exit(1)
 	}
 }
