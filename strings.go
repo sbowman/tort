@@ -42,6 +42,8 @@ func (assert StructAssertions) String(field string) StringAssertions {
 
 // Blank generates an error if the string is not empty with something other than whitespace.
 func (assert StringAssertions) Blank() {
+	assert.t.Helper()
+
 	if strings.TrimSpace(assert.str) != "" {
 		assert.Failed(`%s is not blank; is "%s"`, assert.name, assert.str)
 	}
@@ -49,6 +51,8 @@ func (assert StringAssertions) Blank() {
 
 // NotBlank generates an error if the string is empty or contains only whitespace.
 func (assert StringAssertions) NotBlank() {
+	assert.t.Helper()
+
 	if strings.TrimSpace(assert.str) == "" {
 		assert.Failed(`%s is blank"`, assert.name)
 	}
@@ -56,6 +60,8 @@ func (assert StringAssertions) NotBlank() {
 
 // Empty generates an error if the string contains any characters, including whitespace.
 func (assert StringAssertions) Empty() {
+	assert.t.Helper()
+
 	if assert.str != "" {
 		assert.Failed(`%s is not empty; is "%s"`, assert.name, assert.str)
 	}
@@ -63,6 +69,8 @@ func (assert StringAssertions) Empty() {
 
 // NotEmpty generates an error if the string does not contain any characters, including whitespace.
 func (assert StringAssertions) NotEmpty() {
+	assert.t.Helper()
+
 	if assert.str == "" {
 		assert.Failed(`%s is empty"`, assert.name)
 	}
@@ -70,6 +78,8 @@ func (assert StringAssertions) NotEmpty() {
 
 // Equals generates an error if the string value isn't the same as other.
 func (assert StringAssertions) Equals(other string) {
+	assert.t.Helper()
+
 	if assert.str != other {
 		assert.Failed(`expected %s to be "%s," but it was "%s"`, assert.name, other, assert.str)
 	}
@@ -77,6 +87,8 @@ func (assert StringAssertions) Equals(other string) {
 
 // Equals generates an error if the string value is the same as the other.
 func (assert StringAssertions) NotEquals(other string) {
+	assert.t.Helper()
+
 	if assert.str == other {
 		assert.Failed(`expected %s to not be "%s"`, assert.name, other)
 	}
@@ -84,6 +96,8 @@ func (assert StringAssertions) NotEquals(other string) {
 
 // Contains generates an error if the other value isn't present somewhere in the string.
 func (assert StringAssertions) Contains(other string) {
+	assert.t.Helper()
+
 	if !strings.Contains(assert.str, other) {
 		assert.Failed(`expected %s to contain "%s" (is "%s")`, assert.name, other, assert.str)
 	}
@@ -91,6 +105,8 @@ func (assert StringAssertions) Contains(other string) {
 
 // NotContains generates an error if the other value is present somewhere in the string.
 func (assert StringAssertions) NotContains(other string) {
+	assert.t.Helper()
+
 	if strings.Contains(assert.str, other) {
 		assert.Failed(`expected %s to not contain "%s" (is "%s")`, assert.name, other, assert.str)
 	}
@@ -98,6 +114,8 @@ func (assert StringAssertions) NotContains(other string) {
 
 // Matches generates an error if the string value doesn't match the regular expression.
 func (assert StringAssertions) Matches(expr string) {
+	assert.t.Helper()
+
 	matched, err := regexp.MatchString(expr, assert.str)
 	if err != nil {
 		assert.Fatal(`invalid regular expression "%s"`, expr)
@@ -110,6 +128,8 @@ func (assert StringAssertions) Matches(expr string) {
 
 // NotMatches generates an error if the string value matches the regular expression.
 func (assert StringAssertions) NotMatches(expr string) {
+	assert.t.Helper()
+
 	matched, err := regexp.MatchString(expr, assert.str)
 	if err != nil {
 		assert.Fatal(`invalid regular expression "%s"`, expr)

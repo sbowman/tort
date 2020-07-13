@@ -51,6 +51,8 @@ func (assert StructAssertions) Time(field string) TimeAssertions {
 
 // Set generates an error if the time is set (not zero).
 func (assert TimeAssertions) IsSet() {
+	assert.t.Helper()
+
 	if assert.time.IsZero() {
 		assert.Failed(`%s is not set`, assert.name)
 	}
@@ -58,6 +60,8 @@ func (assert TimeAssertions) IsSet() {
 
 // Unset generates an error if the time is not set (is zero).
 func (assert TimeAssertions) IsNotSet() {
+	assert.t.Helper()
+
 	if !assert.time.IsZero() {
 		assert.Failed(`%s is set to %s`, assert.name, assert.time)
 	}
@@ -65,6 +69,8 @@ func (assert TimeAssertions) IsNotSet() {
 
 // Within generates an error if the time is within the given duration from right now.
 func (assert TimeAssertions) Within(dur time.Duration) {
+	assert.t.Helper()
+
 	since := time.Since(assert.time)
 
 	if since > dur {
@@ -74,6 +80,8 @@ func (assert TimeAssertions) Within(dur time.Duration) {
 
 // Before generates an error if the time is after the other.
 func (assert TimeAssertions) Before(other time.Time) {
+	assert.t.Helper()
+
 	if assert.time.After(other) {
 		assert.Failed(`%s at %s happened after %s`, assert.name, assert.time, other)
 	}
@@ -81,6 +89,8 @@ func (assert TimeAssertions) Before(other time.Time) {
 
 // Before generates an error if the time is before the other.
 func (assert TimeAssertions) After(other time.Time) {
+	assert.t.Helper()
+
 	if assert.time.Before(other) {
 		assert.Failed(`%s at %s happened before %s`, assert.name, assert.time, other)
 	}
@@ -122,6 +132,8 @@ func (assert StructAssertions) Duration(field string) DurationAssertions {
 
 // Equals generates an error if the duration does not equal the other..
 func (assert DurationAssertions) Equals(other time.Duration) {
+	assert.t.Helper()
+
 	if assert.dur == other {
 		assert.Failed(`%s with a duration of %s does not equal %s`, assert.name, assert.dur, other)
 	}
@@ -129,6 +141,8 @@ func (assert DurationAssertions) Equals(other time.Duration) {
 
 // NotEquals generates an error if the duration equals the other..
 func (assert DurationAssertions) NotEquals(other time.Duration) {
+	assert.t.Helper()
+
 	if assert.dur == other {
 		assert.Failed(`%s equals duration %s`, assert.name, other)
 	}
@@ -136,6 +150,8 @@ func (assert DurationAssertions) NotEquals(other time.Duration) {
 
 // GreaterThan generates an error if the duration is less than or equal to the other..
 func (assert DurationAssertions) GreaterThan(other time.Duration) {
+	assert.t.Helper()
+
 	if assert.dur <= other {
 		assert.Failed(`%s duration of %s is less than %s`, assert.name, assert.dur, other)
 	}
@@ -143,6 +159,8 @@ func (assert DurationAssertions) GreaterThan(other time.Duration) {
 
 // LessThan generates an error if the duration is greater than or equal to the other..
 func (assert DurationAssertions) LessThan(other time.Duration) {
+	assert.t.Helper()
+	
 	if assert.dur >= other {
 		assert.Failed(`%s duration of %s is greater than %s`, assert.name, assert.dur, other)
 	}

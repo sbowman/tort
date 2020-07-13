@@ -36,6 +36,8 @@ func (assert StructAssertions) Slice(field string) SliceAssertions {
 
 // Empty generates an error if the length of the slice is not zero.
 func (assert SliceAssertions) Empty() {
+	assert.t.Helper()
+
 	if len(assert.slice) != 0 {
 		assert.Failed(`%s is not an empty slice; has %d elements`, assert.name, len(assert.slice))
 	}
@@ -43,6 +45,8 @@ func (assert SliceAssertions) Empty() {
 
 // Length generates an error if the length of the slice doesn't equal the value supplied.
 func (assert SliceAssertions) Length(expected int) {
+	assert.t.Helper()
+
 	if len(assert.slice) != expected {
 		assert.Failed(`expected %s to have %d elements; has %d instead`, assert.name, expected, len(assert.slice))
 	}
@@ -50,6 +54,8 @@ func (assert SliceAssertions) Length(expected int) {
 
 // MoreThan generates an error if the length of the slice doesn't exceed the value supplied.
 func (assert SliceAssertions) MoreThan(expected int) {
+	assert.t.Helper()
+
 	if len(assert.slice) > expected {
 		assert.Failed(`expected %s to have more than %d elements; has %d instead`, assert.name, expected, len(assert.slice))
 	}
@@ -57,6 +63,8 @@ func (assert SliceAssertions) MoreThan(expected int) {
 
 // FewerThan generates an error if the length of the slice equals or exceeds the value supplied.
 func (assert SliceAssertions) FewerThan(expected int) {
+	assert.t.Helper()
+
 	if len(assert.slice) < expected {
 		assert.Failed(`expected %s to have fewer than %d elements; has %d instead`, assert.name, expected, len(assert.slice))
 	}
