@@ -123,6 +123,42 @@ interface and implements `func Assert() time.Time`.
 * `GreaterThan`
 * `LessThan`
 
+### Slices
+
+* `Empty` - there are no elements in the slice
+* `Length` - does the slice length equal the given value?
+* `MoreThan` - there are more than this number of elements in the slice
+* `FewerThan` - there are fewer than his number of elements in the slice
+
+#### Assertions on the slice elements
+
+Slices also support assertions on slice elements.  Identify the element type 
+by index, then apply any assertions to it for that type.
+
+    func TestSlices(t *testing.T) {
+	    assert := tort.For(t)
+    
+	    slice := []int{3, 1, 4, 1, 5, 9, 2}
+	    
+	    assert.Slice(slice).Length(7)
+	    assert.Slice(slice).MoreThan(6)
+	    assert.Slice(slice).FewerThan(8)
+	    
+	    assert.Slice(slice).Int(0).Equals(3)
+	    assert.Slice(slice).Int(4).GreaterThan(4)
+    }
+ 
+Supports the following types:
+
+* `Bool`
+* `Int`, `Int8`, `Int16`, `Int32`, `Int64`
+* `Uint`, `Uint8`, `Uint16`, `Uint32`, `Uint64`
+* `Float32`, `Float64`
+* `String`
+* `Time`
+* `Duration`
+* `Struct`
+
 ### Structs
 
 Structs focus on testing the properties of the structs.  It checks whether or not the property 

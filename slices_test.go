@@ -6,7 +6,16 @@ import (
 	"github.com/sbowman/tort"
 )
 
-func TestSlices(t *testing.T) {
+func TestBoolSlices(t *testing.T) {
+	assert := tort.For(t)
+
+	slice := []bool{true, true, false}
+	assert.Slice(slice).Length(3)
+	assert.Slice(slice).Bool(0).IsTrue()
+	assert.Slice(slice).Bool(2).IsFalse()
+}
+
+func TestIntSlices(t *testing.T) {
 	assert := tort.For(t)
 
 	slice := []int{3, 1, 4, 1, 5, 9, 2}

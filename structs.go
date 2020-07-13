@@ -3,6 +3,7 @@ package tort
 import (
 	"fmt"
 	"reflect"
+	"strconv"
 )
 
 // StructAssertions test object properties.
@@ -51,6 +52,32 @@ func (assert StructAssertions) Struct(field string) StructAssertions {
 		obj: property.Interface(),
 	}
 }
+
+// Struct looks up an element in a slice expecting it to be a struct or a pointer to a struct.
+func (assert SliceAssertions) Struct(idx int) StructAssertions {
+	name := strconv.Itoa(idx)
+	property := assert.Element(idx)
+	kind := property.Kind()
+
+	var isnil bool
+
+	if kind == reflect.Ptr {
+		kind = property.Type().Elem().Kind()
+		isnil = property.IsNil()
+	}
+
+	if kind != reflect.Struct {
+		assert.Fatal("%v is not a struct %d/%d", property.Interface(), kind, reflect.Struct)
+	}
+
+	return StructAssertions{
+		Assertions: assert.Assertions,
+		name: name,
+		obj: property.Interface(),
+		isnil: isnil,
+	}
+}
+
 
 // Type returns the name of the struct.
 func (assert StructAssertions) Type() string {
