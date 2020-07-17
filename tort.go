@@ -3,7 +3,7 @@ package tort
 
 import "testing"
 
-// For initializes the Tort assertions for a test case.
-func For(t *testing.T) Assertions {
-	return NewAssertions(t)
+// For initializes the Tort assertions for a test case or benchmark.
+func For(tb testing.TB) Assertions {
+	return NewAssertions(tb)
 }

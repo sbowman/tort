@@ -2,25 +2,30 @@ package tort
 
 import (
 	"fmt"
+	"strings"
 	"testing"
 )
 
 // Assertions are the base set of assertions.
 type Assertions struct {
-	t *testing.T
+	t testing.TB
 	msg string
 }
 
 // NewAssertiona creates a new Assertions object to use for a test case.
-func NewAssertions(t *testing.T) Assertions {
+func NewAssertions(t testing.TB) Assertions {
 	return Assertions{
 		t: t,
 	}
 }
 
 // When describes something about the assertion, e.g. assert.When("creating a user").
-func (assert Assertions) When(msg string) Assertions {
-	assert.msg = msg
+func (assert Assertions) When(msg ...string) Assertions {
+	if len(msg) == 1 {
+		assert.msg = msg[0]
+	} else {
+		assert.msg = strings.Join(msg, " ")
+	}
 	return assert
 }
 
