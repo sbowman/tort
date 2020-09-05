@@ -69,8 +69,8 @@ The following outlines the assertions available for each data type.
 
 ### Errors
 
-* `Nil`
-* `NotNil`
+* `Nil` - takes an optional message parameter, to help describe the error
+* `NotNil` - takes an optional message parameter, to help describe what was expected
 * `Equals`
 * `NotEquals`
 
@@ -115,6 +115,8 @@ interface and implements `func Assert() time.Time`.
 * `Within` - is the time within a certain duration from now; useful for checking if the time was set recently
 * `Before` - is the time before the given time
 * `After` - is the time after the given time
+* `Equals` - are the two times equal
+* `NotEquals` - are the two times different
 
 ### Duration
 
