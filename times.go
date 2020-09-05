@@ -124,6 +124,24 @@ func (assert TimeAssertions) After(other time.Time) {
 	}
 }
 
+// Equals generates an error if the two times aren't equal.
+func (assert TimeAssertions) Equals(other time.Time) {
+	assert.t.Helper()
+
+	if !assert.time.Equal(other) {
+		assert.Failed(`%s at %s does not equal %s`, assert.name, assert.time, other)
+	}
+}
+
+// Equals generates an error if the two times aren't equal.
+func (assert TimeAssertions) NotEquals(other time.Time) {
+	assert.t.Helper()
+
+	if assert.time.Equal(other) {
+		assert.Failed(`%s at %s equals %s`, assert.name, assert.time, other)
+	}
+}
+
 // DurationAssertions are tests around duration values.
 type DurationAssertions struct {
 	Assertions
