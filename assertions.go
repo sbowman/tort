@@ -8,8 +8,14 @@ import (
 
 // Assertions are the base set of assertions.
 type Assertions struct {
-	t testing.TB
+	t   testing.TB
 	msg string
+}
+
+// A provides an alias shortcut for assertions.  Makes it easier to use the With function in test
+// cases.
+type A struct {
+	Assertions
 }
 
 // NewAssertiona creates a new Assertions object to use for a test case.
@@ -27,6 +33,12 @@ func (assert Assertions) When(msg ...string) Assertions {
 		assert.msg = strings.Join(msg, " ")
 	}
 	return assert
+}
+
+// With is like When, except that the assertion is passed to a function for processing.
+func (assert Assertions) With(msg string, fn func(A)) {
+	assert.msg = msg
+	fn(A{assert})
 }
 
 // Failed outputs the final error message to *testing.T.
