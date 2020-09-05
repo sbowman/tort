@@ -18,20 +18,30 @@ func (assert Assertions) Error(err error) ErrorAssertions {
 }
 
 // IsNil generates an error message if the error isn't nil.
-func (assert ErrorAssertions) IsNil() {
+func (assert ErrorAssertions) IsNil(msg ...string) {
 	assert.t.Helper()
 
 	if assert.err != nil {
-		assert.Failed(`unexpected error "%s"`, assert.err)
+		if len(msg) == 0 {
+			assert.Failed(`unexpected error "%s"`, assert.err)
+			return
+		}
+
+		assert.Failed(`%s: %s`, msg[0], assert.err)
 	}
 }
 
 // IsNotNil generates an error message when the error is nil.
-func (assert ErrorAssertions) IsNotNil() {
+func (assert ErrorAssertions) IsNotNil(msg ...string) {
 	assert.t.Helper()
 
 	if assert.err == nil {
-		assert.Failed("expected error wasn't present")
+		if len(msg) == 0 {
+			assert.Failed("expected error wasn't present")
+			return
+		}
+
+		assert.Failed(msg[0])
 	}
 }
 
