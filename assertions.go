@@ -25,6 +25,34 @@ func NewAssertions(t testing.TB) Assertions {
 	}
 }
 
+// Nil checks if the value is nil.  If not, generates an error.
+func (assert Assertions) IsNil(val interface{}, msg ...string) {
+	assert.t.Helper()
+
+	if val != nil {
+		if len(msg) == 0 {
+			assert.Failed(`unexpected value "%s"`, val)
+			return
+		}
+
+		assert.Failed(`%s: %s`, strings.Join(msg, " "), val)
+	}
+}
+
+// NotNil checks that the value is not nil.  If it is, generates an error.
+func (assert Assertions) IsNotNil(val interface{}, msg ...string) {
+	assert.t.Helper()
+
+	if val == nil {
+		if len(msg) == 0 {
+			assert.Failed(`unexpected value "%s" was not present`, val)
+			return
+		}
+
+		assert.Failed(`%s: %s`, strings.Join(msg, " "), val)
+	}
+}
+
 // When describes something about the assertion, e.g. assert.When("creating a user").
 func (assert Assertions) When(msg ...string) Assertions {
 	if len(msg) == 1 {

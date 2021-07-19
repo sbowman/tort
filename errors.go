@@ -1,5 +1,9 @@
 package tort
 
+import (
+	"errors"
+	"strings"
+)
 
 // ErrorAssertions test errors.
 type ErrorAssertions struct {
@@ -13,7 +17,7 @@ func (assert Assertions) Error(err error) ErrorAssertions {
 
 	return ErrorAssertions{
 		Assertions: assert,
-		err: err,
+		err:        err,
 	}
 }
 
@@ -27,7 +31,7 @@ func (assert ErrorAssertions) IsNil(msg ...string) {
 			return
 		}
 
-		assert.Failed(`%s: %s`, msg[0], assert.err)
+		assert.Failed(`%s: %s`, strings.Join(msg, " "), assert.err)
 	}
 }
 
@@ -41,7 +45,7 @@ func (assert ErrorAssertions) IsNotNil(msg ...string) {
 			return
 		}
 
-		assert.Failed(msg[0])
+		assert.Failed(strings.Join(msg, " "))
 	}
 }
 
@@ -60,5 +64,23 @@ func (assert ErrorAssertions) NotEquals(expected error) {
 
 	if assert.err == expected {
 		assert.Failed(`expected error "%s" not to be "%s"`, expected, assert.err)
+	}
+}
+
+// Is checks the error is this kind of error.
+func (assert ErrorAssertions) Is(expected error) {
+	assert.t.Helper()
+
+	if assert.err == nil || !errors.Is(assert.err, expected) {
+		assert.Failed(`error "%s" is not "%s"`, assert.err, expected)
+	}
+}
+
+// IsNot checks if the error is not this kind of error.
+func (assert ErrorAssertions) IsNot(expected error) {
+	assert.t.Helper()
+
+	if errors.Is(assert.err, expected) {
+		assert.Failed(`error "%s" is "%s"`, assert.err, expected)
 	}
 }

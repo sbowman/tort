@@ -78,3 +78,11 @@ func (assert BoolAssertions) IsFalse() {
 		assert.Failed(`%s is true`, assert.name)
 	}
 }
+
+func (assert BoolAssertions) Equals(val bool) {
+	assert.t.Helper()
+
+	if assert.yesno != val {
+		assert.Failed(`%s is %t, but expected to be %t`, assert.name, assert.yesno, val)
+	}
+}
