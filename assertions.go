@@ -18,14 +18,14 @@ type A struct {
 	Assertions
 }
 
-// NewAssertiona creates a new Assertions object to use for a test case.
+// NewAssertions creates a new Assertions object to use for a test case.
 func NewAssertions(t testing.TB) Assertions {
 	return Assertions{
 		t: t,
 	}
 }
 
-// Nil checks if the value is nil.  If not, generates an error.
+// IsNil checks if the value is nil.  If not, generates an error.
 func (assert Assertions) IsNil(val interface{}, msg ...string) {
 	assert.t.Helper()
 
@@ -39,13 +39,41 @@ func (assert Assertions) IsNil(val interface{}, msg ...string) {
 	}
 }
 
-// NotNil checks that the value is not nil.  If it is, generates an error.
+// IsNotNil checks that the value is not nil.  If it is, generates an error.
 func (assert Assertions) IsNotNil(val interface{}, msg ...string) {
 	assert.t.Helper()
 
 	if val == nil {
 		if len(msg) == 0 {
 			assert.Failed(`unexpected value "%s" was not present`, val)
+			return
+		}
+
+		assert.Failed(`%s: %s`, strings.Join(msg, " "), val)
+	}
+}
+
+// IsTrue confirms the value is true.  If not, generates an error.
+func (assert Assertions) IsTrue(val bool, msg ...string) {
+	assert.t.Helper()
+
+	if !val {
+		if len(msg) == 0 {
+			assert.Failed("value was false; should have been true")
+			return
+		}
+
+		assert.Failed(`%s: %s`, strings.Join(msg, " "), val)
+	}
+}
+
+// IsFalse confirms the value is false.  If not, generates an error.
+func (assert Assertions) IsFalse(val bool, msg ...string) {
+	assert.t.Helper()
+
+	if val {
+		if len(msg) == 0 {
+			assert.Failed("value was true; should have been false")
 			return
 		}
 

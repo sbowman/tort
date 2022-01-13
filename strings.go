@@ -12,7 +12,7 @@ import (
 type StringAssertions struct {
 	Assertions
 	name string
-	str string
+	str  string
 }
 
 // String identifies a string variable value and returns test functions for its values.
@@ -21,8 +21,8 @@ func (assert Assertions) String(value string) StringAssertions {
 
 	return StringAssertions{
 		Assertions: assert,
-		name: "string",
-		str: value,
+		name:       "string",
+		str:        value,
 	}
 }
 
@@ -40,8 +40,8 @@ func (assert StructAssertions) String(field string) StringAssertions {
 
 	return StringAssertions{
 		Assertions: assert.Assertions,
-		name: name,
-		str: property.String(),
+		name:       name,
+		str:        property.String(),
 	}
 }
 
@@ -58,8 +58,8 @@ func (assert SliceAssertions) String(idx int) StringAssertions {
 
 	return StringAssertions{
 		Assertions: assert.Assertions,
-		name: name,
-		str: property.String(),
+		name:       name,
+		str:        property.String(),
 	}
 }
 
@@ -74,6 +74,24 @@ func (assert StringAssertions) Blank() {
 
 // NotBlank generates an error if the string is empty or contains only whitespace.
 func (assert StringAssertions) NotBlank() {
+	assert.t.Helper()
+
+	if strings.TrimSpace(assert.str) == "" {
+		assert.Failed(`%s is blank"`, assert.name)
+	}
+}
+
+// IsBlank is an alias for Blank.
+func (assert StringAssertions) IsBlank() {
+	assert.t.Helper()
+
+	if strings.TrimSpace(assert.str) != "" {
+		assert.Failed(`%s is not blank; is "%s"`, assert.name, assert.str)
+	}
+}
+
+// IsNotBlank is an alias for NotBlank.
+func (assert StringAssertions) IsNotBlank() {
 	assert.t.Helper()
 
 	if strings.TrimSpace(assert.str) == "" {
@@ -104,11 +122,11 @@ func (assert StringAssertions) Equals(other string) {
 	assert.t.Helper()
 
 	if assert.str != other {
-		assert.Failed(`expected %s to be "%s," but it was "%s"`, assert.name, other, assert.str)
+		assert.Failed(`expected %s to be "%s" but it was "%s"`, assert.name, other, assert.str)
 	}
 }
 
-// Equals generates an error if the string value is the same as the other.
+// NotEquals generates an error if the string value is the same as the other.
 func (assert StringAssertions) NotEquals(other string) {
 	assert.t.Helper()
 
@@ -162,4 +180,3 @@ func (assert StringAssertions) NotMatches(expr string) {
 		assert.Failed(`expected %s not to match "%s" (is %s)`, assert.name, expr, assert.str)
 	}
 }
-
