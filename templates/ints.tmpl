@@ -73,7 +73,7 @@ func (assert Int{{.Bits}}Assertions) Equals(other int{{.Bits}}) {
 	}
 }
 
-// Equals generates an error if the integer value is the same as the other.
+// NotEquals generates an error if the integer value is the same as the other.
 func (assert Int{{.Bits}}Assertions) NotEquals(other int{{.Bits}}) {
     assert.t.Helper()
 
