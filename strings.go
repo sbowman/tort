@@ -77,7 +77,7 @@ func (assert StringAssertions) NotBlank() {
 	assert.t.Helper()
 
 	if strings.TrimSpace(assert.str) == "" {
-		assert.Failed(`%s is blank"`, assert.name)
+		assert.Failed(`%s is blank`, assert.name)
 	}
 }
 
@@ -95,7 +95,7 @@ func (assert StringAssertions) IsNotBlank() {
 	assert.t.Helper()
 
 	if strings.TrimSpace(assert.str) == "" {
-		assert.Failed(`%s is blank"`, assert.name)
+		assert.Failed(`%s is blank`, assert.name)
 	}
 }
 
