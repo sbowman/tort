@@ -53,6 +53,34 @@ func (assert Assertions) IsNotNil(val interface{}, msg ...string) {
 	}
 }
 
+// Nil checks if the value is nil.  If not, generates an error.
+func (assert Assertions) Nil(val interface{}, msg ...string) {
+	assert.t.Helper()
+
+	if val != nil {
+		if len(msg) == 0 {
+			assert.Failed(`unexpected value "%s"`, val)
+			return
+		}
+
+		assert.Failed(`%s: %s`, strings.Join(msg, " "), val)
+	}
+}
+
+// NotNil checks that the value is not nil.  If it is, generates an error.
+func (assert Assertions) NotNil(val interface{}, msg ...string) {
+	assert.t.Helper()
+
+	if val == nil {
+		if len(msg) == 0 {
+			assert.Failed(`unexpected value "%s" was not present`, val)
+			return
+		}
+
+		assert.Failed(`%s: %s`, strings.Join(msg, " "), val)
+	}
+}
+
 // IsTrue confirms the value is true.  If not, generates an error.
 func (assert Assertions) IsTrue(val bool, msg ...string) {
 	assert.t.Helper()
@@ -69,6 +97,34 @@ func (assert Assertions) IsTrue(val bool, msg ...string) {
 
 // IsFalse confirms the value is false.  If not, generates an error.
 func (assert Assertions) IsFalse(val bool, msg ...string) {
+	assert.t.Helper()
+
+	if val {
+		if len(msg) == 0 {
+			assert.Failed("value was true; should have been false")
+			return
+		}
+
+		assert.Failed(`%s: %s`, strings.Join(msg, " "), val)
+	}
+}
+
+// True confirms the value is true.  If not, generates an error.
+func (assert Assertions) True(val bool, msg ...string) {
+	assert.t.Helper()
+
+	if !val {
+		if len(msg) == 0 {
+			assert.Failed("value was false; should have been true")
+			return
+		}
+
+		assert.Failed(`%s: %s`, strings.Join(msg, " "), val)
+	}
+}
+
+// False confirms the value is false.  If not, generates an error.
+func (assert Assertions) False(val bool, msg ...string) {
 	assert.t.Helper()
 
 	if val {
