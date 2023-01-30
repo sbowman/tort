@@ -153,6 +153,24 @@ func (assert StringAssertions) NotContains(other string) {
 	}
 }
 
+// EndsWith generates an error if the other value isn't present at the end of the string.
+func (assert StringAssertions) EndsWith(other string) {
+	assert.t.Helper()
+
+	if !strings.HasSuffix(assert.str, other) {
+		assert.Failed(`expected %s to have "%s" at the end (is "%s")`, assert.name, other, assert.str)
+	}
+}
+
+// StartsWith generates an error if the other value isn't present at the beginning of the string.
+func (assert StringAssertions) StartsWith(other string) {
+	assert.t.Helper()
+
+	if strings.HasPrefix(assert.str, other) {
+		assert.Failed(`expected %s to have "%s" at the beginning (is "%s")`, assert.name, other, assert.str)
+	}
+}
+
 // Matches generates an error if the string value doesn't match the regular expression.
 func (assert StringAssertions) Matches(expr string) {
 	assert.t.Helper()
