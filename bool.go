@@ -79,6 +79,24 @@ func (assert BoolAssertions) IsFalse() {
 	}
 }
 
+// True generates an error if the boolean value is false.
+func (assert BoolAssertions) True() {
+	assert.t.Helper()
+
+	if assert.yesno == false {
+		assert.Failed(`%s is false`, assert.name)
+	}
+}
+
+// False generates an error if the boolean value is true.
+func (assert BoolAssertions) False() {
+	assert.t.Helper()
+
+	if assert.yesno == true {
+		assert.Failed(`%s is true`, assert.name)
+	}
+}
+
 func (assert BoolAssertions) Equals(val bool) {
 	assert.t.Helper()
 

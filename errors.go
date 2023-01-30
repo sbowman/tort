@@ -49,6 +49,34 @@ func (assert ErrorAssertions) IsNotNil(msg ...string) {
 	}
 }
 
+// Nil generates an error message if the error isn't nil.
+func (assert ErrorAssertions) Nil(msg ...string) {
+	assert.t.Helper()
+
+	if assert.err != nil {
+		if len(msg) == 0 {
+			assert.Failed(`unexpected error "%s"`, assert.err)
+			return
+		}
+
+		assert.Failed(`%s: %s`, strings.Join(msg, " "), assert.err)
+	}
+}
+
+// NotNil generates an error message when the error is nil.
+func (assert ErrorAssertions) NotNil(msg ...string) {
+	assert.t.Helper()
+
+	if assert.err == nil {
+		if len(msg) == 0 {
+			assert.Failed("expected error wasn't present")
+			return
+		}
+
+		assert.Failed(strings.Join(msg, " "))
+	}
+}
+
 // Equals checks that the expected error was generated.
 func (assert ErrorAssertions) Equals(expected error) {
 	assert.t.Helper()
